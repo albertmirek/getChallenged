@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Button, Modal } from 'react-native';
+import { StyleSheet, View, TextInput, Modal } from 'react-native';
+import {Container, Button, Header, Card, Content, Text} from 'native-base';
+
+
+import HeaderCustom from './HeaderCustom';
+
 
 
 const ChallengeInput = props => {
@@ -18,8 +23,7 @@ const ChallengeInput = props => {
 
     return(
         <Modal visible={props.visible} animationType="slide">
-            <View style={styles.inputContainer}>
-            <TextInput placeholder="Challenge" 
+            {/* <TextInput placeholder="Challenge" 
                     style={styles.input}
                     onChangeText={challengeInputHandler}
                     value={enteredChallenge}
@@ -27,8 +31,21 @@ const ChallengeInput = props => {
             <View style={styles.btnsContainer}>
                 <Button title="Add" onPress={addChallengeHandler} />
                 <Button title="Cancel" color="red" onPress={props.onCancel} />
-            </View>
-        </View>
+            </View> */}
+              <Container>
+                <HeaderCustom title="Lets create a new Challenge!" />
+                <Content padder>
+                  <Card>
+                    <TextInput 
+                    onChangeText={challengeInputHandler}
+                    placeholder="Add here smth" />
+                    <Button onPress={props.onAddChallenge.bind(this, enteredChallenge)}>
+                      <Text>Save</Text>
+                    </Button>
+                  </Card>
+                  
+                </Content>
+              </Container>
       </Modal>
     );
 
@@ -51,7 +68,8 @@ const styles = StyleSheet.create({
           flexDirection: 'row',
           justifyContent: 'space-between',
           width: '50%'
-      }
+      },
+    
 })
 
 

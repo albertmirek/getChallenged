@@ -3,10 +3,10 @@ import {StyleSheet} from 'react-native';
 import {Container, Text} from 'native-base';
 
 
-const LoginScreen = props => ({});
+const Template = props => {};
 
 
 const styles = StyleSheet.create({});
 
 
-export default LoginScreen;
+export default Template;

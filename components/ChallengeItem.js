@@ -6,7 +6,7 @@ const ChallengeItem = props => {
 
 
     return (
-        <TouchableOpacity key={props.id} onPress={props.onDelete.bind(this,props.id)} activeOpacity={0.3}>
+        <TouchableOpacity key={props.id}  activeOpacity={0.3}>
             <View style={styles.listItem}>
                 <Text>{props.title}</Text>
             </View>
