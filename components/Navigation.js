@@ -10,7 +10,7 @@ const Navigation = props => {
             <Content />
             <Footer>
                 <FooterTab>
-                    <Button vertical>
+                    <Button vertical onPress={()=>props.nav.navigate('Challenges')}>
                         <Icon />
                         <Text>Challenges</Text>
                     </Button>
