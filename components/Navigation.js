@@ -2,25 +2,29 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Header, Content, Container, Footer, FooterTab, Icon, Text, Button } from 'native-base';
 
+import Colors from '../constants/Colors'
 
-const Navigation = props => {
+const Navigation = ({nav}) => {
+
+    
+
     return(
         <Container style={styles.screen}>
             
             <Content />
-            <Footer>
+            <Footer style={styles.footer}>
                 <FooterTab>
-                    <Button vertical onPress={()=>props.nav.navigate('Challenges')}>
+                    <Button vertical onPress={()=>nav.navigate('Challenges')}>
                         <Icon />
-                        <Text>Challenges</Text>
+                        <Text style={styles.text}>Challenges</Text>
+                    </Button>
+                    <Button vertical onPress={() => nav.navigate('CreateChallenge')}>
+                        <Icon type='AntDesign' name='pluscircle' style={styles.icon} />
+                        <Text style={styles.subText}>Create</Text>
                     </Button>
                     <Button vertical>
-                        <Icon />
-                        <Text>+</Text>
-                    </Button>
-                    <Button vertical>
-                        <Icon />
-                        <Text style={styles.text}>More</Text>
+                        <Icon type='SimpleLineIcons' name='options' style={styles.icon} />
+                        <Text style={styles.subText}>Options</Text>
                     </Button>
                 </FooterTab>
             </Footer>
@@ -30,7 +34,25 @@ const Navigation = props => {
 
 const styles = StyleSheet.create({
     screen:{
-    
+        
+    },
+    footer:{
+        backgroundColor: Colors.secondary,
+    },
+    text:{
+        color:Colors.primary,
+        fontSize:16,
+        fontWeight: '700'
+    },
+    subText:{
+        color:Colors.primary,
+        fontSize:11,
+        
+    },
+    icon:{
+        color:Colors.primary,
+        fontSize:20,
+        paddingTop:10
     }
 
 })

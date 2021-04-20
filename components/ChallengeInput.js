@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Modal } from 'react-native';
-import {Container, Button, Header, Card, Content, Text} from 'native-base';
+import { StyleSheet, View, TextInput, Modal, Button } from 'react-native';
+import {Container, Header, Card, Content, Text} from 'native-base';
 
 
 import HeaderCustom from './HeaderCustom';
@@ -33,15 +33,17 @@ const ChallengeInput = props => {
                 <Button title="Cancel" color="red" onPress={props.onCancel} />
             </View> */}
               <Container>
-                <HeaderCustom title="Lets create a new Challenge!" />
+                <Header>
+                  <Button title="X"/>
+                </Header>
                 <Content padder>
                   <Card>
                     <TextInput 
                     onChangeText={challengeInputHandler}
                     placeholder="Add here smth" />
-                    <Button onPress={props.onAddChallenge.bind(this, enteredChallenge)}>
+                    {/* <Button >
                       <Text>Save</Text>
-                    </Button>
+                    </Button> */}
                   </Card>
                   
                 </Content>

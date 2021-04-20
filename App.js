@@ -6,7 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
 
-
+import Colors from './constants/Colors'
 
 import ChallengesScreen from './screens/ChallengesScreen';
 import HomeScreen from './screens/HomeScreen';
@@ -14,6 +14,7 @@ import HomeScreen from './screens/HomeScreen';
 import Navigation from './components/Navigation';
 import HeaderCustom from './components/HeaderCustom';
 import AuthScreen from './screens/AuthScreen';
+import CreateChallengeScreen from './screens/CreateChallengeScreen';
 
 const Stack = createStackNavigator();
 
@@ -42,7 +43,14 @@ export default function App(){
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+      screenOptions={{
+        headerStyle:{
+          backgroundColor:Colors.primary,
+        },
+        headerTintColor: Colors.secondary
+      }}
+      >
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -51,13 +59,18 @@ export default function App(){
           name="Challenges"
           component={ChallengesScreen}
           />
+          <Stack.Screen
+          name="CreateChallenge"
+          component={CreateChallengeScreen}
+          options={{title:'Let\'s Create Challenge'}}
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );  
 };
 
 const styles = StyleSheet.create({
-  
+
   
   
 });

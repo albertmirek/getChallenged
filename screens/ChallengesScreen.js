@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import {StyleSheet, Alert, FlatList} from 'react-native';
-import {Container, Text, Button} from 'native-base';
+import {StyleSheet, Alert, FlatList, Button, View} from 'react-native';
+import {Container, Text} from 'native-base';
 
 import ChallengeInput from '../components/ChallengeInput';
 import ChallengeItem from '../components/ChallengeItem';
 
 import {addChallenge, getChallenges} from '../api/ChallengeApi';
+import Colors from '../constants/Colors'
 
 
-const ChallengesScreen = props => {
+const ChallengesScreen = ({navigation}) => {
 
     
     const [userChallenges, setUserChallenges] = useState([]);
@@ -29,10 +30,15 @@ const ChallengesScreen = props => {
     };
 
     return(
-        <Container style={styles.screen}>
-            <Button block onPress={()=>setIsAddMode(true)}>
+        <View style={styles.screen}>
+            {/* <Button block onPress={()=>navigation.navigate('CreateChallenge')}>
                 <Text>Create new Challenge!</Text>
-            </Button>
+            </Button> */}
+            <Button 
+                color={Colors.secondary}
+                onPress={()=>navigation.navigate('CreateChallenge')}
+                title='Create new Challenge!'
+                />
             <ChallengeInput visible={isAddMode} onAddChallenge={addChallengeHandler} />
             <FlatList
                 keyExtractor={(item, index) =>item.id}
@@ -44,7 +50,7 @@ const ChallengesScreen = props => {
                     />
                 )}
                 />
-        </Container>
+        </View>
     );
 };
 
@@ -57,6 +63,11 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
     
+    },
+    btn:{
+        paddingTop:20,
+        color:Colors.secondary,
+        alignSelf: 'center'
     }
 });
 

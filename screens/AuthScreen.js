@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
+import {StyleSheet, View, Text, TextInput, Button, Alert} from 'react-native';
 import {Container} from 'native-base';
 import auth from '@react-native-firebase/auth';
 
@@ -48,11 +48,19 @@ const LoginScreen = props => {
         try {
             let response= await auth().createUserWithEmailAndPassword(email, password);
             if(response){
-                console.log(response);
+                Alert.alert('Success', 'Account created successfully');
             }
 
         } catch (error) {
             console.log(error.message)
+        }
+    }
+
+    const logIn = async (email,password) => {
+        try{
+            let response = await auth().signInWithEmailAndPassword(email, password);
+        }catch(error){
+            Alert.alert('Authentication went wrong', 'Please insert correct information or Sign Up')
         }
     }
 
@@ -76,7 +84,7 @@ const LoginScreen = props => {
             <View style={styles.btnContainer}>
                 <Button 
                 title='Login' 
-                
+                onPress={()=> logIn(email,password)}
                 style={styles.btnPrimary}
                 />
                 <Button 
