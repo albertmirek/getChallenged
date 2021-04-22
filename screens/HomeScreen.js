@@ -1,40 +1,38 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 
 import Navigation from '../components/Navigation';
 import HeaderCustom from '../components/HeaderCustom';
+import FormButton from '../components/FormButton';
 
 import ChallengesScreen from './ChallengesScreen';
 
-import auth, { firebase } from '@react-native-firebase/auth';
 import ChallengeInput from '../components/ChallengeInput';
-import { useState } from 'react/cjs/react.development';
 import Colors from '../constants/Colors';
+import { AuthContext } from '../navigation/AuthProvider';
 
 
 
-const HomeScreen = ({navigation })=> {
+export default function HomeScreen () {
 
     const [modalVisible, setModalVisible] = useState(false);
+    const {user, logout} = useContext(AuthContext);
 
     const modalVisibleHandler = () => {
         setModalVisible(true);
     }
 
-    const signOut = async () =>{
-        await firebase.auth().signOut();
-    }
-
     return(
         <View style={styles.screen}>
             {/* <HeaderCustom title="GetChallenged" /> */}
-            <Button title="Navigate to Challenges" 
+            {/* <Button title="Navigate to Challenges" 
              onPress={() => navigation.navigate('Challenges')}
              color={Colors.secondary}
-             />
+             /> */}
 
+            <FormButton buttonTitle='Logout' onPress={()=>logout()} />
 
-            <Navigation nav={navigation} modalVisibleHandler={()=>modalVisibleHandler()} />
+            {/* <Navigation nav={navigation} modalVisibleHandler={()=>modalVisibleHandler()} /> */}
 
     
 
@@ -52,6 +50,4 @@ const styles = StyleSheet.create({
       },
       
 });
-
-export default HomeScreen;
 

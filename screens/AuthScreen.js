@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {StyleSheet, View, Text, TextInput, Button, Alert} from 'react-native';
 import {Container} from 'native-base';
-import auth from '@react-native-firebase/auth';
+
+// import auth from '@react-native-firebase/auth';
 
 
 import HeaderCustom from '../components/HeaderCustom';
@@ -13,9 +14,8 @@ const LoginScreen = props => {
 
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-
-    const[error, setError] = useState();
-    const[valid, setValid] = useState();
+    
+    
 
     const emailInputHandler = (enteredText) => {
         setEmail(enteredText);
@@ -23,45 +23,6 @@ const LoginScreen = props => {
 
     const passwordInputHandler = (enteredText) => {
         setPassword(enteredText);
-    }
-
-    function signIn(email, password){
-        if(!email){
-            setError('Email required');
-            setValid(false);
-            return;
-        }else if(!password && password.trim() && password.length > 6 ){
-            setError('Weak password, min length is 5 characters');
-            setValid(false);
-            return;
-        }
-        // }else if(!__isValidEmail(email)){
-        //     setError('Invalid Email');
-        //     setValid(false);
-        //     return;
-        // }
-        createUser(email, password);
-    }
-    
-    const createUser = async (email, password) => {
-
-        try {
-            let response= await auth().createUserWithEmailAndPassword(email, password);
-            if(response){
-                Alert.alert('Success', 'Account created successfully');
-            }
-
-        } catch (error) {
-            console.log(error.message)
-        }
-    }
-
-    const logIn = async (email,password) => {
-        try{
-            let response = await auth().signInWithEmailAndPassword(email, password);
-        }catch(error){
-            Alert.alert('Authentication went wrong', 'Please insert correct information or Sign Up')
-        }
     }
 
 
@@ -84,7 +45,7 @@ const LoginScreen = props => {
             <View style={styles.btnContainer}>
                 <Button 
                 title='Login' 
-                onPress={()=> logIn(email,password)}
+                onPress={props.logIn(email,password)}
                 style={styles.btnPrimary}
                 />
                 <Button 
@@ -114,7 +75,7 @@ const LoginScreen = props => {
             />
             <View style={styles.btnContainer}>
                 <Button title='Sign Up' 
-                onPress={() => signIn(email,password)}
+                onPress={props.signIn(email,password)}
                 />
                 <Button title='Log In' 
                 onPress={()=> (setSwitchToSign(false),setEmail(''), setPassword(''))} 

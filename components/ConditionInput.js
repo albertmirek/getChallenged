@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, Button, TextInput, TouchableOpacity, Image,
-    StyleSheet, Modal
+import { View, Text,  TextInput, TouchableOpacity, Image,
+    StyleSheet, Modal, Alert
 
 } from 'react-native';
 
-import {CardItem, Header, Card, Badge, Picker, Icon, Switch, ActionSheet, Root, Form, Item} from 'native-base';
+import {CardItem, Header, Card, Badge, Picker, Icon, Switch, ActionSheet, Root, Form, Item, Row, Button, Content} from 'native-base';
 import CustomActionSheet from './CustomActionSheet';
+import CustomPicker from './CustomPicker';
 
 import Colors from '../constants/Colors';
 import DefinedActivities from '../constants/DefinedActivities';
@@ -18,49 +19,65 @@ var CANCEL_INDEX = 4;
 var BUTTONS_I_A = [];
 var BUTTONS_I_A_CANCEL = BUTTONS_I_A.length;
 
+// TODOS:
+//Dodělat kontroly: např. při zadání numerického repetition
+
 const ConditionInput = props => {
 
-    const [enteredCondition, setEnteredConditon] = useState([]);
+    const [enteredCondition, setEnteredConditon] = useState();
 
     const [area, setArea] = useState('');
-    const [technology, setTechnology] = useState();
-    const [activity, setActivity] = useState();
-    const [goalType, setGoalType] = useState();
-    const [goal, setGoal] = useState();
+    const [activity, setActivity] = useState('');
+    const [goalType, setGoalType] = useState('');
+    const [goal, setGoal] = useState('');
     const [isEnabled, setIsEnabled] = useState(false);
-
-
-    function insertActivities(area){
-        
-        BUTTONS_I_A=[];
-        BUTTONS_I_A.push("Cancel");
-        DefinedActivities.forEach(element => {
-            if(element.area=area&&element.function == 'area'){
-                BUTTONS_I_A.push(element.name);
-            }
-            // var length = BUTTONS_I_A.length;
-            // BUTTONS_I_A[length] = "Cancel";
-            
-        });
-    }
+    const [unit, setUnit] = useState('');
+    const [unitIsEnabled, setUnitIsEnabled] = useState(false);
+    const [repetition, setRepetition] = useState('');
+    const [repetitionNumeric, setRepetitionNumeric] = useState('');
+    const [repetitionEnabled, setRepetitionEnabled] = useState(false);
+    useEffect(() => {
+        setEnteredConditon('');
+        setArea('');
+        setActivity('');
+        setGoal('');
+        setIsEnabled(false);
+        setGoalType('');
+        setUnit('');
+        setUnitIsEnabled(false);
+        setRepetition('');
+        setRepetitionNumeric('');
+        setRepetitionEnabled(false);
+      }, [props.visibility]);
 
     const onGoalTypeChange = (val) => {
         setGoal(val);
     }
 
-    useEffect(() => {
-        setArea('');
-        setTechnology('');
-        setActivity('');
-        setGoal('');
-        setIsEnabled(false);
-      }, [props.visibility]);
+    function createCondition(){
+        if(area=='' || activity=='' || goal==''){
+            Alert.alert('Error', 'Please input all required informations about condition');
+        }else{
+            setEnteredConditon([
+                {
+                    area: area,
+                    activity: activity,
+                    goalType:goalType,
+                    goal:goal,
+                    isEnabled:isEnabled,
+                    unit:unit,
+                    unitIsEnabled,
+                    repetitionEnabled:repetitionEnabled,
+                    repetitionNumeric:repetitionNumeric,
+                    repetition:repetition
+                }]);
+                props.onCreate(enteredCondition)
+        }
+    }
+
 
     let activityOptions;
-
     if(isEnabled && area!=''){
-        // insertActivities(area);
-        // BUTTONS_I_A += ['Test'];
         activityOptions = <View style={styles.activityContainer}>
         <CustomActionSheet title='Choose activity' 
                 sheetTitle='Select from listed areas'
@@ -69,31 +86,61 @@ const ConditionInput = props => {
                 setState={(val)=>setActivity(val)}
                 
         />
-        <Text style={{color:Colors.secondary, fontSize:16, alignSelf:'center', fontWeight:'600'}}>{activity}</Text>
+        <Text style={styles.mainText}>{activity}</Text>
         </View>
-        // <View style={styles.activityContainer}><Button title='Choose activity' color={Colors.secondary} 
-        // onPress={() =>
-        // ActionSheet.show(
-        // {
-        //     options: BUTTONS_I_A,
-        //     cancelButtonIndex: BUTTONS_I_A_CANCEL,
-        //     title: "Select from listed areas"
-        // },
-        // buttonIndex => {
-        //     //this.setState({ clicked: BUTTONS[buttonIndex] });
-        //     if(BUTTONS_I_A[buttonIndex]==='Cancel'){return;}else{
-        //         setActivity(BUTTONS_I_A[buttonIndex]);
-        //     }
-        // })}
-        // /><Text style={{color:Colors.secondary, fontSize:16, alignSelf:'center', fontWeight:'600'}}>{activity}</Text>
-        // </View>
     }
     else{
         activityOptions=<TextInput style={styles.textInput} placeholder='Type in the activity for this condition' />;
     }
 
+    let units;
+    if(unitIsEnabled){
+        units=<CustomPicker usage='units' area={area} activity={activity} setState={(val)=>setUnit(val)} />
+    }else{units=<TextInput placeholder='Specify units (km, words,..)' onChangeText={(val)=>setUnit(val)} />}
+
+    let goalOptions;
+    if(goalType=='Numeric'){
+        goalOptions=<View>
+            <Text style={styles.informativeText}>To select from predefined unit measures toggle the switch on. Otherwise type in unit measure</Text>
+            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                <Switch style={{marginTop:10}}
+                    trackColor={{ false: "#767577", true: Colors.secondSetPrimary }}
+                    // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                    thumbColor={unitIsEnabled ? Colors.secondary:  "#f4f3f4"}
+                    ios_backgroundColor="#3e3e3e"
+                    onValueChange={() => setUnitIsEnabled(previousState =>!previousState)}
+                    value={unitIsEnabled}/>
+                    
+                    {units}
+            
+            </View>
+            <View style={{flexDirection:'row', justifyContent:'center', alignItems:'center', paddingTop:10}}>
+            <TextInput style={styles.textInput} onChangeText={(text)=>setGoal(text)} placeholder='Numeric Goal'/>
+            <Text style={styles.informativeText}>[{unit}]</Text>
+            </View>
+        </View>;
+    }else if(goalType=='Binary'){
+        goalOptions=<View>
+            <Text style={styles.informativeText}>By enabling binary option, higher specified action will need to be performed every given interval specified in Repetition section </Text>
+        </View>;
+        if(repetitionEnabled==false){
+            setRepetitionEnabled(true);
+        }
+    }
+    let repetitionOptions;
+    if(goalType=='Numeric' && repetitionEnabled==true){
+        repetitionOptions = <View style={{flexDirection:'row', justifyContent:'space-between', paddingTop:10}}>
+            <CustomPicker usage='repetition' setState={(val)=> setRepetition(val)} />
+            <Text>Calculated amount:</Text>
+        </View>;
+    }else if(goalType=='Binary'&&repetitionEnabled==true){
+        repetitionOptions = <View style={{flexDirection:'row', justifyContent:'center', paddingTop:10}}>
+        <CustomPicker usage='repetition' setState={(val)=> setRepetition(val)} />
+        </View>;
+    }
 
     return(
+
         <Root>
         <Modal visible={props.visibility} animationType="slide">
               <View style={styles.screen}>
@@ -102,15 +149,14 @@ const ConditionInput = props => {
                         <Text style={styles.title}>Condition creation</Text>
                         <View style={styles.btnContainer}>
                             {/* TODO Buttons logics */}
-                            <Button title='Cancel'
-                                // onPress={props.onCancel}
+                            <Button  danger transparent
                                 onPress={props.onCancel}
-                                color='red'
-                            />
-                            <Button title='Create'
-                                //onPress={props.onCreate}
-                                color={Colors.secondary}
-                            />
+                            ><Text style={{color:'red', fontSize:20, fontWeight:'bold'}} >Cancel</Text></Button>
+
+                            <Button transparent 
+                                onPress={()=>createCondition()}
+                            ><Text style={{color:Colors.secondary, fontSize:20, fontWeight:'bold'}}>Create</Text></Button>
+                        
                         </View>
                         </View>
                   </Header>
@@ -125,7 +171,7 @@ const ConditionInput = props => {
                                     <Text style={{color:Colors.primary, fontWeight:'bold'}}>1</Text>
                                 </Badge> */}
 
-                                <Button title='Choose area' color={Colors.secondary}
+                                <Button bordered dark style={{}}
                                 onPress={() =>
                                 ActionSheet.show(
                                 {
@@ -139,25 +185,19 @@ const ConditionInput = props => {
                                         setArea(BUTTONS[buttonIndex]);
                                     }
                                 })}
-                                /> 
+                                ><Text style={styles.btnText}>Choose area</Text></Button>
 
                                 <Text>:</Text>
                                 <View style={{justifyContent:'center', alignItems:'center'}}>
-                                    <Text style={{color:'#CC80FF'}}>Chosen area:</Text>
-                                    <Text style={{fontSize:16, color:Colors.secondary}}>{area}</Text>
+                                    <Text style={styles.subText}>Chosen area:</Text>
+                                    <Text style={styles.mainText}>{area}</Text>
                                 </View>
                             </View>
-                        {/* <Switch
-                            trackColor={{ false: "#767577", true: "#81b0ff" }}
-                            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={toggleSwitch}
-                            value={isEnabled}
-                        /> */}
+                
                         </CardItem>
                         <CardItem style={styles.cardItem}>
                             <View style={styles.switchContainer}>
-                                <Text>For third party trackers switch on</Text>
+                                <Text style={styles.informativeText}>For third party trackers switch on</Text>
                                 <Switch style={{marginTop:10}}
                                     trackColor={{ false: "#767577", true: Colors.secondSetPrimary }}
                                     // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
@@ -170,7 +210,7 @@ const ConditionInput = props => {
                         </CardItem>
                         <CardItem style={styles.cardItem}>
                             <View>
-                            <Text >By enabling third party trackers, choosing from activites of certain area is limited</Text>
+                            <Text style={styles.informativeText} >By enabling third party trackers, choosing from activites of certain area is limited</Text>
                             
                             {activityOptions}
                             
@@ -180,16 +220,41 @@ const ConditionInput = props => {
                         </CardItem>
                         <CardItem style={styles.cardItem}>
                             <View style={styles.goalContainer}>
-                                <Text style={styles.headerGoal}>Goal</Text>
-                                <View>
+                                <Text style={styles.headerGoal}>Goal modeling</Text>
+                                <View style={{flexDirection:'row', justifyContent: 'space-between'}}>
                                     <CustomActionSheet title='Choose type' sheetTitle='Select from listed types'
                                     setState={(val) => setGoalType(val)}
                                     usage='goalType'
                                     />
+                                    <View style={{justifyContent:'center', alignContent:'center'}}>
+                                        <Text style={styles.subText}>Chosen type:</Text>
+                                        <Text style={styles.mainText}>{goalType}</Text>
+                                    </View>
+                                    
                                 </View>
+                                {goalOptions}    
+                            </View>
+                            
+                        </CardItem>
+
+                        <CardItem style={styles.cardItem}>
+                            <View style={{flex:1}}>
+                                <Text style={{color:Colors.secondary, alignSelf:'center', fontSize:18, paddingVertical:10 }}>Repetition</Text>
+                                <Text style={styles.informativeText}>This section is optional and is for specifying repetition of task</Text>
+                                <Text style={styles.informativeText}>By defining repetition participants will need to enter progress every specified repetition.</Text>
+                                {/* <CustomPicker usage='repetition' setState={(val)=> setRepetition(val)} /> */}
+                                <Switch style={{marginTop:10}}
+                                    trackColor={{ false: "#767577", true: Colors.secondSetPrimary }}
+                                    // thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                                    thumbColor={repetitionEnabled ? Colors.secondary:  "#f4f3f4"}
+                                    ios_backgroundColor="#3e3e3e"
+                                    onValueChange={() => setRepetitionEnabled(previousState =>!previousState)}
+                                    value={repetitionEnabled}/>
+                                    <View>
+                                        {repetitionOptions}
+                                    </View>
                             </View>
                         </CardItem>
-                        
                     </Card>
                     
                 </View>
@@ -208,12 +273,13 @@ const styles = StyleSheet.create({
     screen:{
         flex: 1,
         justifyContent: 'flex-start',
-        
+        backgroundColor:Colors.primary
     },
     btnContainer:{
         flexDirection:'row',
         justifyContent:'space-between',
-        alignItems:'center'
+        alignItems:'center',
+        backgroundColor:Colors.primary
     },  
     header:{
         backgroundColor:Colors.primary
@@ -221,7 +287,7 @@ const styles = StyleSheet.create({
     headerContainer:{
         flex: 1,
         justifyContent:'flex-start',
-    
+        backgroundColor:Colors.primary
     },
     title:{
         alignSelf:'center',
@@ -231,7 +297,7 @@ const styles = StyleSheet.create({
     },
     bodyContainer:{
         flex:1,
-        marginTop:40,
+        
         
     },
     areaContainer:{
@@ -245,8 +311,6 @@ const styles = StyleSheet.create({
         backgroundColor:Colors.subPrimary,
         borderBottomColor:Colors.secondary,
         borderBottomWidth:0.3,
-        
-
     },
     switchContainer:{
         flexDirection:'column',
@@ -255,7 +319,8 @@ const styles = StyleSheet.create({
     textInput:{
         fontSize:18,
         paddingTop:10,
-        color:Colors.secondary,
+        color:Colors.primary,
+        fontWeight:'500'
     },
     activityContainer:{
         flexDirection:'row',
@@ -274,7 +339,25 @@ const styles = StyleSheet.create({
         flex:1,
         
     },
-
+    mainText:{
+        color:Colors.primary,
+        fontSize:16,
+        alignSelf:'center',
+        fontWeight:'500',
+        borderBottomWidth:1
+    },
+    informativeText:{
+        color:Colors.subsubPrimary
+    },
+    subText:{
+        fontSize:14,
+        color:Colors.subsubPrimary,
+    },
+    btnText:{
+        fontSize:14,
+        fontWeight:'500',
+        paddingHorizontal:5
+    },  
 
 });
 

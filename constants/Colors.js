@@ -1,23 +1,23 @@
 export default{
     //
-    primary: '#FFF605',
-    //primary: '#ffc840',
-    //primary: '#FFFF80',
-    //primary:'#FFAC09',
-    // primary:'#E05828',
+    // primary: '#FFF605',
+    
 
-    // subPrimary: '#ffdd7d',
-    subPrimary: '#FFF777',
-    //subPrimary:'#E0A228',
-    // subPrimary:'#D4D4D4',
+    
+    // subPrimary: '#FFF777',
+    
 
-    secondary: '#9205FF',
-    // secondary: '#7C40FF',
-    // secondary: '#CC80FF',
-    // secondary:'#000000',
+    // secondary: '#9205FF',
+    
 
 
-    secondSetPrimary: '#EA6263',
-    secondSetSecondary: '#6299EA',
+    // secondSetPrimary: '#EA6263',
+    // secondSetSecondary: '#6299EA',
+
+    primary:'#eb6e34',
+    subPrimary:'#e3e3e3',
+    subsubPrimary:'#858383',
+
+    secondary:'#000000'
     
 };

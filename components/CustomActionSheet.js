@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Button, Text, StyleSheet } from 'react-native';
-import {ActionSheet} from 'native-base';
+import { View, Text, StyleSheet } from 'react-native';
+import {ActionSheet, Button} from 'native-base';
 
 
 import DefinedActivities from '../constants/DefinedActivities';
@@ -23,8 +23,7 @@ const CustomActionSheet = props => {
                 if(element.area==props.area&&element.usage == 'activity'){
                     BUTTONS.push(element.name);
                 }
-                // var length = BUTTONS_I_A.length;
-                // BUTTONS_I_A[length] = "Cancel";
+                
                 
             });
         }else{
@@ -32,8 +31,6 @@ const CustomActionSheet = props => {
                 if(element.usage==props.usage){
                     BUTTONS.push(element.name);
                 }
-                // var length = BUTTONS_I_A.length;
-                // BUTTONS_I_A[length] = "Cancel";
                 
             });
         }
@@ -44,7 +41,7 @@ const CustomActionSheet = props => {
     }
     
     return(
-        <Button title={props.title} color={Colors.secondary}
+        <Button bordered dark color={Colors.secondary}
             onPress={() =>
             ActionSheet.show(
             {
@@ -58,7 +55,7 @@ const CustomActionSheet = props => {
                     props.setState(BUTTONS[buttonIndex]);
                 }
             })}
-            />
+            ><Text style={styles.btnText}>{props.title}</Text></Button>
     )
 
 
@@ -68,5 +65,9 @@ export default CustomActionSheet;
 
 
 const styles = StyleSheet.create({
-    
+    btnText:{
+        fontSize:14,
+        fontWeight:'500',
+        paddingHorizontal:5
+    },
 });

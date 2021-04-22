@@ -5,7 +5,7 @@ import {Container, Text} from 'native-base';
 import ChallengeInput from '../components/ChallengeInput';
 import ChallengeItem from '../components/ChallengeItem';
 
-import {addChallenge, getChallenges} from '../api/ChallengeApi';
+
 import Colors from '../constants/Colors'
 
 

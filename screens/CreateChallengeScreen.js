@@ -8,8 +8,10 @@ import Icons from '../constants/Icons';
 import ConditionInput from '../components/ConditionInput';
 import DatePicker from '../components/DatePicker';
 
+import firestore from '@react-native-firebase/firestore';
 
-const CreateChallengeScreen = () => {
+
+const CreateChallengeScreen = props => {
 
     const [visibilityCondition, setVisibilityCondition] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
@@ -17,8 +19,10 @@ const CreateChallengeScreen = () => {
     const [beginDate, setBeginDate] = useState(new Date);
     const [endDate, setEndDate] = useState(new Date);
 
+    var allConditions= [];
 
-    console.log(endDate-beginDate);
+
+    console.log(props.user)
 
     const onConditionCreateHandler = () => {
 
@@ -28,6 +32,13 @@ const CreateChallengeScreen = () => {
         }else{
             Alert.alert("Wrong date", "Please choose correct date before specifying conditions");
         }
+    }
+    
+    function createConditionHandler (val){
+        allConditions.push(val);
+
+
+        setVisibilityCondition(false);
     }
 
 
@@ -98,7 +109,8 @@ const CreateChallengeScreen = () => {
                 </Tabs>
 
             <ConditionInput visibility={visibilityCondition}
-                onCancel={()=> setVisibilityCondition(false)} 
+                onCancel={()=> setVisibilityCondition(false)}
+                onCreate={(val)=>createConditionHandler(val)}
                 beginDate={beginDate} endDate={endDate}
                 />
             
