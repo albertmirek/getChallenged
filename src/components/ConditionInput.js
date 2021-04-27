@@ -12,19 +12,15 @@ import Colors from '../constants/Colors';
 import DefinedActivities from '../constants/DefinedActivities';
 import Icons from '../constants/Icons';
 
+import firestore from '@react-native-firebase/firestore';
 
 var BUTTONS = ["Sport", "Restrictions", "TODO Activity", "Other", "Cancel"];
 var CANCEL_INDEX = 4;
-
-var BUTTONS_I_A = [];
-var BUTTONS_I_A_CANCEL = BUTTONS_I_A.length;
 
 // TODOS:
 //Dodělat kontroly: např. při zadání numerického repetition
 
 const ConditionInput = props => {
-
-    const [enteredCondition, setEnteredConditon] = useState();
 
     const [area, setArea] = useState('');
     const [activity, setActivity] = useState('');
@@ -36,8 +32,8 @@ const ConditionInput = props => {
     const [repetition, setRepetition] = useState('');
     const [repetitionNumeric, setRepetitionNumeric] = useState('');
     const [repetitionEnabled, setRepetitionEnabled] = useState(false);
+
     useEffect(() => {
-        setEnteredConditon('');
         setArea('');
         setActivity('');
         setGoal('');
@@ -50,29 +46,24 @@ const ConditionInput = props => {
         setRepetitionEnabled(false);
       }, [props.visibility]);
 
-    const onGoalTypeChange = (val) => {
-        setGoal(val);
-    }
-
     function createCondition(){
-        if(area=='' || activity=='' || goal==''){
+        if(area=='' || activity==''){
             Alert.alert('Error', 'Please input all required informations about condition');
         }else{
-            setEnteredConditon([
-                {
+                props.onCreate({
                     area: area,
                     activity: activity,
                     goalType:goalType,
                     goal:goal,
                     isEnabled:isEnabled,
                     unit:unit,
-                    unitIsEnabled,
+                    unitIsEnabled:unitIsEnabled,
                     repetitionEnabled:repetitionEnabled,
                     repetitionNumeric:repetitionNumeric,
                     repetition:repetition
-                }]);
-                props.onCreate(enteredCondition)
+                });
         }
+        
     }
 
 

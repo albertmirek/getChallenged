@@ -44,8 +44,8 @@ const DatePicker = props =>{
                     display="default"
                     onChange={onChange}
                     minimumDate={new Date()}
-
-                    textColor={Colors.secondary}
+                    style={{backgroundColor:Colors.primary, color:Colors.secondary}}
+                    textColor={Colors.primary}
                     />
                 )}
     </View>

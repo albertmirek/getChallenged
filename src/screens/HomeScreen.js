@@ -24,21 +24,14 @@ export default function HomeScreen ({navigation}) {
 
     return(
         <View style={styles.screen}>
-            {/* <HeaderCustom title="GetChallenged" /> */}
-            {/* <Button title="Navigate to Challenges" 
-             onPress={() => navigation.navigate('Challenges')}
-             color={Colors.secondary}
-             /> */}
+            
 
             <FormButton buttonTitle='Logout' onPress={()=>logout()} />
 
+
+
             <Navigation nav={navigation} modalVisibleHandler={()=>modalVisibleHandler()} />
 
-    
-
-            {/* <Button title='Sign Out'
-            onPress={() => signOut()}
-            /> */}
         </View>
     );
 }

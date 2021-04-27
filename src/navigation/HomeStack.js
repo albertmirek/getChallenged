@@ -15,9 +15,9 @@ export default function HomeStack(){
             <Stack.Navigator
                 screenOptions={{
                     headerStyle:{
-                        backgroundColor:Colors.primary,
+                        backgroundColor:Colors.secondary,
                     },
-                    headerTintColor:Colors.secondary
+                    headerTintColor:Colors.primary
                 }}>
                 <Stack.Screen name='Home' 
                     component={HomeScreen}/>
@@ -28,7 +28,7 @@ export default function HomeStack(){
                 <Stack.Screen
                     name="CreateChallenge"
                     component={CreateChallengeScreen}
-                    options={{title:'Let\'s Create Challenge'}}
+                    options={{title:'Let\'s Create Challenge'}, { header: () => null }}
                     // user={user}
                 />   
             </Stack.Navigator>
