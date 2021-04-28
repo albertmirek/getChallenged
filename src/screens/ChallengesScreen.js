@@ -8,58 +8,55 @@ import ChallengeItem from '../components/ChallengeItem';
 import {AuthContext} from '../navigation/AuthProvider';
 import firestore from '@react-native-firebase/firestore';
 
+
 import Colors from '../constants/Colors'
 
 
 const ChallengesScreen = ({navigation}) => {
 
     
-    const [userChallenges, setUserChallenges] = useState([]);
-    const [isAddMode,setIsAddMode] = useState(false);
     const [challenges, setChallenges] = useState([]);
 
     const {user} = useContext(AuthContext);
 
     useEffect(()=>{
         firestore().collection('participants').doc(user.uid).get()
-        .then((retrieved) => getChallenges(retrieved))
+        .then((retrieved) => getChallenges(retrieved._data.challenges))
     },[])
 
-    // const addChallengeHandler = challengeTitle =>{
-    //     setUserChallenges(currentChallenges =>[
-    //         ...currentChallenges, {
-    //             id:Math.random().toString(), value:challengeTitle
-    //         }
-    //     ]);
-    //     setIsAddMode(false);
-    // }
-
-    const onChallengesReceived = (userChallenges) => {
-        console.log(challengeList);
-    };
-
     function getChallenges(array){
-        // console.log(array);
-        array._data.challenges.forEach(challenge => {
-            // console.log(challenge)
-            firestore().collection('challenges').doc(challenge).get()
-            .then((retrieved) => {
-                retrieved._data.id= challenge;
-                if(challenges==[]){
-                    setChallenges(retrieved);
-                    console.log(challenges)
-                }
-                else{
-                    setChallenges([...challenges,retrieved]);
-                }
-                // console.log(retrieved);
+        if(array==[]){
+            return;
+        }else{
+            array.forEach(challenge => {
+                firestore().collection('challenges').doc(challenge).get()
+                .then((retrieved) => {
+                    retrieved._data.id = challenge;
+                    console.log(retrieved);
+                    if(validateDuplicity(retrieved)){
+                        if(challenges===[]){
+                            setChallenges(retrieved);
+                        }
+                        else{
+                            setChallenges([...challenges,retrieved]);
+                        }
+                    }
+                    // console.log(retrieved);
+                });
             });
-        });
+        }
+        console.log(challenges);
     }
-    function insertChallenge(challenge, id){
-        challenge._data.id = id;
-        setChallenges([...challenges, challenge]);
-        
+
+    function validateDuplicity(challenge){
+        var val = true;
+        challenges.forEach(element => {
+            if(element._data.id==challenge._data.id){
+                val = false;
+            }
+        });
+        console.log(val);
+        return val;
     }
 
     return(
@@ -81,28 +78,18 @@ const ChallengesScreen = ({navigation}) => {
                     />
                 )}
                 /> */}
-                {/* <FlatList
+                <FlatList
                     data={challenges}
                     renderItem={({item})=> (
-                        // <ConditionCreated 
-                        //     area={item._data.area}
-                        //     activity={item._data.activity}
-                        //     goalType={item._data.goalType}
-                        //     goal={item._data.goal}
-                        //     isEnabled={item._data.isEnabled}
-                        //     unit={item._data.unit}
-                        //     unitIsEnabled={item._data.unitIsEnabled}
-                        //     repetition={item._data.repetition}
-                        //     repetitionNumeric={item._data.repetitionNumeric}
-                        //     repetitionEnabled={item._data.repetitionEnabled}
-                        // />
-                        <ChallengeItem
+                        <ChallengeItem 
                             name={item._data.name}
                             stage={item._data.stage}
-                            />
+                            beginDate={item._data.beginDate}
+                            endDate={item._data.endDate}
+                        />
                     )}
                     keyExtractor={item=>item._data.id}
-                /> */}
+                />
         </View>
     );
 };

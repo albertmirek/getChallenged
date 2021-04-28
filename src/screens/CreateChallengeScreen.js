@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react';
 import { Text, View , StyleSheet, Button, Image, TouchableOpacity, Alert, FlatList} from 'react-native';
-import { Title,Switch, Header, Icon, Tabs, Tab, Content, StyleProvider, Card, CardItem, Form, Item, Label, Input, ListItem, CheckBox, Body, Segment, Left, Right, Container, Footer} from 'native-base';
+import {Textarea, Title,Switch, Header, Icon, Tabs, Tab, Content, StyleProvider, Card, CardItem, Form, Item, Label, Input, ListItem, CheckBox, Body, Segment, Left, Right, Container, Footer} from 'native-base';
 
 import Colors from '../constants/Colors';
 import Icons from '../constants/Icons';
@@ -12,16 +12,19 @@ import {windowHeight, windowWidth} from '../utils/Dimensions';
 
 
 import firestore from '@react-native-firebase/firestore';
+import firebase from '@react-native-firebase/app'
 import {AuthContext} from '../navigation/AuthProvider';
 
 
 const CreateChallengeScreen = props => {
 
     const [visibilityCondition, setVisibilityCondition] = useState(false);
+
     const [isPublic, setIsPublic] = useState(false);
-    
+    const [challengeName, setChallengeName] = useState('');
     const [beginDate, setBeginDate] = useState(new Date);
     const [endDate, setEndDate] = useState(new Date);
+    const [description, setDescription] = useState('');
 
     const {user} = useContext(AuthContext);
     
@@ -141,16 +144,27 @@ const CreateChallengeScreen = props => {
     const createChallengeHandler = () => {
         if(reference!=''){
             firestore().collection('challenges').doc(reference).update({
-                stage:'created'
+                stage:'created',
+                name: challengeName,
+                isPublic: isPublic,
+                description:description,
+                beginDate: beginDate,
+                endDate: endDate,
             });
-            // var subcollection = reference+'/participants/'+user.uid;
-            // firestore().collection('challenges').doc(subcollection).set({
-            //     id:user.uid
-            // });
-            firestore().collection('participants').doc(user.uid).set({
-                challenges:[
-                    reference
-                ]
+
+            //If array is not set then firestore().set else firestore().update
+            firestore().collection('participants').doc(user.uid).get()
+            .then((retrieved)=>{
+                if(retrieved._data!=undefined){
+                    firestore().collection('participants').doc(user.uid).update({
+                            challenges: firestore.FieldValue.arrayUnion(reference),
+                        });
+                }else{
+                    firestore().collection('participants').doc(user.uid).set({
+                        challenges: firestore.FieldValue.arrayUnion(reference),
+                    });
+                    console.log('We are updating!');
+                }
             });
             props.navigation.navigate('Home');
         }
@@ -189,15 +203,16 @@ const CreateChallengeScreen = props => {
                                         <Icon type={Icons.addIcon.type} name={Icons.addIcon.name} style={styles.imgIcon} />
                                         <CardItem style={{backgroundColor:Colors.secondary}}>
                                                 <Item>
-                                                    <Label style={{color:Colors.primary}}>Name Challenge: </Label>
-                                                    <Input style={{color:Colors.primary, fontWeight:'bold', alignSelf:'center'}} />
+                                                    <Label style={{color:'white'}}>Name Challenge: </Label>
+                                                    <Input style={{color:Colors.primary, fontWeight:'bold', alignSelf:'center'}} onChangeText={(text)=>setChallengeName(text)} 
+                                                            autoCorrect={false} />
                                                 </Item>
                                         </CardItem>
                                         
                                         <ListItem style={{backgroundColor:Colors.secondary}}>
                                             <CheckBox checked={isPublic} onPress={()=>setIsPublic(!isPublic)} color={Colors.primary} style={{}}/>
                                             <Body style={{marginHorizontal:10}}>
-                                                <Text style={{color:Colors.primary, fontSize:18}}>Public</Text>
+                                                <Text style={{color:'white', fontSize:18}}>Public</Text>
                                             </Body>
                                         </ListItem>
                                         <View style={{flexDirection:'row', justifyContent:'space-between', alignContent:'center', paddingTop:10}}>
@@ -212,8 +227,16 @@ const CreateChallengeScreen = props => {
                                             </View>
                                         </View>
                                         {/* TODO Start/End date picker; Description TextArea */}
+                                        <Form style={{marginTop:10, borderWidth:1, borderColor:Colors.primary, margin:10, borderRadius:10, backgroundColor:Colors.primary}}>
+                                            <Textarea rowSpan={5} placeholderTextColor={'white'} selectionColor={Colors.primary}
+                                                placeholder='Enter short description about this challenge ..'
+                                                autoCorrect={false} onChangeText={(text)=>setDescription(text)}
+                                                />
+                                                
+                                        </Form>
                                     </Card>
                                 </View>
+                                
                         </Tab>
 
                         <Tab heading='Conditions'  activeTabStyle={{backgroundColor:Colors.primary}}
@@ -314,7 +337,7 @@ const styles = StyleSheet.create({
     },
     
     text:{
-        color:Colors.primary,
+        color:'white',
         paddingLeft:15
     },
 });
