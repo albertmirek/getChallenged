@@ -8,6 +8,8 @@ export default{
     todo:{type:'MaterialCommunityIcons', name:'marker-check'},
     positiveCheck:{type:'AntDesign', name:'checkcircle'},
     negativeCheck:{type:'AntDesgin', name:'closecircle'},
-    trophy:{type:'EvilIcons', name:'trophy'}
+    trophy:{type:'EvilIcons', name:'trophy'},
+    arrowBack:{type:'Ionicons', name:'arrow-back'},
+    options:{type:'SimpleLineIcons', name:'options'}
     
 };

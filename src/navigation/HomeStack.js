@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../screens/HomeScreen';
 import ChallengesScreen from '../screens/ChallengesScreen';
 import CreateChallengeScreen from '../screens/CreateChallengeScreen';
+import ChallengeScreen from '../screens/ChallengeScreen';
 
 import Colors from '../constants/Colors';
 
@@ -31,6 +32,11 @@ export default function HomeStack(){
                     options={{title:'Let\'s Create Challenge'}, { header: () => null }}
                     // user={user}
                 />   
+                <Stack.Screen
+                    name='Challenge'
+                    component={ChallengeScreen}
+                    options={{ header: () => null }}
+                />
             </Stack.Navigator>
     )
 }

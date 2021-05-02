@@ -12,7 +12,15 @@ const ChallengeItem = props => {
     // endDate.format('dd/mm/yyyy');
 
     return(
-        <TouchableOpacity>
+        <TouchableOpacity onPress={()=> props.navigation.navigate('Challenge',{
+            id: props.id,
+            name:props.name,
+            beginDate: props.beginDate,
+            endDate: props.endDate,
+            description: props.description,
+            stage: props.stage,
+            })}>
+
             <Card>
                 <CardItem header>
                     <Text>{props.name}</Text>
