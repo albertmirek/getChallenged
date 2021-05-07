@@ -37,10 +37,18 @@ const CustomPicker = props =>{
         })
     }
 
+    function insertConditions(){
+        props.conditions.forEach(condition=>{
+            pickerItems.push({label:condition.area+': '+condition.activity, value:condition.id})
+        })
+    }
+
     if(props.usage=='units'){
         insertUnits();
     }else if(props.usage=='repetition'){
         insertItems();
+    } else if(props.usage == 'conditions'){
+        insertConditions();
     }
 
     return(

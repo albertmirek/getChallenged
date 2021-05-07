@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "229884568318",
+    "firebase_url": "https://getchallenged-fa4b0-default-rtdb.firebaseio.com",
+    "project_id": "getchallenged-fa4b0",
+    "storage_bucket": "getchallenged-fa4b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:229884568318:android:19a1aee1d7b0e799d2bbaf",
+        "android_client_info": {
+          "package_name": "com.getchallenged"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "229884568318-8dbtsg4sgth3bc373urugtcio128mp38.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdSK-uWt6vmd3uAEdy7__qpmctJhtxa44"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "229884568318-8dbtsg4sgth3bc373urugtcio128mp38.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "229884568318-evhfk1lpnb6v0kula7vi2legiqneueqj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.GetChallenged"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

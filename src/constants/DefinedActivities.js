@@ -2,7 +2,7 @@ import Icons from './Icons';
 export default[
     {
         usage:"activity",
-        name:"Running",
+        name:"Run",
         area:"Sport",
         iconType: Icons.running.type,
         iconName: Icons.running.name,
@@ -12,7 +12,7 @@ export default[
     },
     {
         usage:"activity",
-        name:"Cycling",
+        name:"Ride",
         area:"Sport",
         iconType: Icons.cycling.type,
         iconType: Icons.cycling.name,
@@ -22,7 +22,7 @@ export default[
     },
     {
         usage:"activity",
-        name:"Walking",
+        name:"Walk",
         area:"Sport",
         iconType: Icons.cycling.type,
         iconType: Icons.cycling.name,

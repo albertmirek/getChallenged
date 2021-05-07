@@ -1,82 +1,126 @@
-import React, {useState} from 'react';
-import { View, StyleSheet, Text, Button } from 'react-native';
+import React, {useState, useContext, useEffect} from 'react';
+import { View, StyleSheet, Text, Button, FlatList } from 'react-native';
+import {Form, Header, Input, Picker} from 'native-base';
+import moment from 'moment';
 
-import RNPickerSelect from 'react-native-picker-select';
-// import Modal from 'react-native-modal';
+
+import FormInput from '../components/FormInput';
+import CustomActionSheet from '../components/CustomActionSheet';
 import Modal from 'react-native-modal';
 import Colors from '../constants/Colors';
 import {windowWidth, windowHeight} from '../utils/Dimensions';
-import {authorize} from 'react-native-app-auth';
+import {DatabaseContext} from '../navigation/DatabaseProvider';
+import {AuthContext} from '../navigation/AuthProvider';
+import {ApiContext} from '../navigation/ApiProvider';
+import firestore from '@react-native-firebase/firestore';
+import ActivityItem from './ActivityItem';
 
 
-export default function InputModal(props){
+const InputModal =props =>{
 
     const [tokens, setTokens] = useState();
+    const [chosenCondition, setChosenCondition] = useState();
+    const [activities, setActivities] = useState([]);
 
+    const {isExpired, accessTokenStravaExpiration, hasRefreshToken, insertActivity} = useContext(DatabaseContext);
+    const {user} = useContext(AuthContext);
+    const {setToken,token,stravaInitialExchange, stravaConfig, stravaActivitiesEndpoint, doRefreshToken} = useContext(ApiContext);
+
+    useEffect(()=>{
+        console.log('effect');
+        console.log(props.condition);
+    },[activities])
     // console.log(props.conditions);
-    // const config = {
-    //     clientId: '65386',
-    //     clientSecret: '670bdd77878b804b3ff3137e4f7c74c6c3f7e8f7',
-    //     // redirectUrl: 'myapp://oauthredirect',
-    //     redirectUrl: 'org.getchallenged://getchallenged.org/',
-    //     serviceConfiguration: {
-    //       authorizationEndpoint: 'https://www.strava.com/oauth/mobile/authorize',
-    //       tokenEndpoint:
-    //         'https://www.strava.com/oauth/token?client_id=65386&client_secret=670bdd77878b804b3ff3137e4f7c74c6c3f7e8f7',
-    //         // revocationEndpoint: 'https://www.strava.com/oauth/deauthorize'
 
-    //     },
-    //     scopes: ['activity:read_all'],
-    //   };
-      
-    //   async function hangleLogin(){
-    //     try {
-    //         const authState = await authorize(config);
-    //       } catch (e) {
-    //           console.log(e)
-    //       }
-    //   }
-      const openStravaApp = async () => {
-        const config = {
-            clientId: '65386',
-            clientSecret: '670bdd77878b804b3ff3137e4f7c74c6c3f7e8f7',
-            // redirectUrl: 'myapp://oauthredirect',
-            redirectUrl: 'myapp://localhost',
-            // redirectUrl: 'org.getchallenged://getchallenged.org/',
-            serviceConfiguration: {
-              authorizationEndpoint: 'https://www.strava.com/oauth/mobile/authorize',
-              tokenEndpoint: 'https://www.strava.com/oauth/token?client_id=65386&client_secret=670bdd77878b804b3ff3137e4f7c74c6c3f7e8f7',
-    
-            },
-            scopes: ['activity:read_all'],
-        };
-        const result = await authorize(config).then((val) =>console.log(val));
-      };
+    const openStravaApp = () => {
+        if(token==''){
+            firestore().collection('participants').doc(user.uid+'/apis/strava').get()
+            .then((retrievedToken)=>{
+                console.log(retrievedToken.refreshToken);
+                var nowDate = new Date();
+                if(retrievedToken._exists==true && Date.parse(retrievedToken._data.accessTokenExpirationDate)>Date.parse(nowDate)){
+                    console.log('fetching');
+                    setToken(retrievedToken._data);
+                    getActivities(retrievedToken._data.accessToken);
+                }else if(retrievedToken.exists==true && Date.parse(retrievedToken._data.accessTokenExpirationDate)<Date.parse(nowDate)){
+                   doRefreshToken(retrievedToken._data.refreshToken)
+                }else{
+                    stravaInitialExchange(stravaConfig);
+                }
+            })
+        }else{
+            console.log(token.accessToken);
+            getActivities(token.accessToken);
+        }
+    };
+
+    async function getActivities(accessToken) { 
+    {/*        TODOOOO          */}
+        // Dodělat způsob jak přidávat na základě data
+
+        await fetch(stravaActivitiesEndpoint+accessToken)
+                    .then(res=>res.json())
+                    .then(data=>{
+                        data.forEach(activity => {
+                            if(activity.type==props.condition.activity){
+                                if(activities!=[]){
+                                    setActivities(prevActivities=>[...prevActivities, activity]);
+                                }else{
+                                    setActivities(activity);
+                                }
+                            }
+                        });
+                        // setActivities(data);
+                        console.log(data);
+                    })
+    }
+
 
 
     return(
         <Modal isVisible={props.isVisible}
-                // avoidKeyboard={true}
-                // backdropColor={Colors.pr}
                 deviceHeight={windowHeight}
                 deviceWidth={windowWidth}
         >
             <View style={styles.screen}>
+                
+                
+
+                <Button bordered warning  style={{alignSelf:'center', padding:5}}
+                        onPress={()=>openStravaApp()}
+                        title='Fetch Activities with Strava'
+                        />
+
+                <FlatList
+                        data={activities}
+                        renderItem={({item})=> (
+                            <ActivityItem
+                                id={item.id}
+                                distance={item.distance}
+                                time={item.moving_time}
+                                name={item.name}
+                                date={item.start_date_local}
+                                condition={props.condition}
+                                onPress={()=>props.getActivity(item)}
+                            />
+                        )}
+                        keyExtractor={item=>item.id}
+                    />
+
                 <Button onPress={()=>props.setIsVisible(false)} 
                     title='Go back'
-                />
-                <Text>First Modal</Text>
-                <Button  style={{alignSelf:'center'}}
-                    title='Connect with Strava'
-                    onPress={()=>openStravaApp()}
+                    style={styles.goback}
                 />
                 
             </View>
+            
         </Modal>
     )
 
 
 }
+
+export default InputModal;
 
 const styles = StyleSheet.create({
     screen:{
@@ -85,6 +129,9 @@ const styles = StyleSheet.create({
         width:windowWidth*0.9,
         backgroundColor:'white',
         borderRadius:40,
-        
-    }
+        flex:0.9
+    },
+    goback:{
+        alignSelf:'flex-end'
+    },  
 });

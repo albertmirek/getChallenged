@@ -47,7 +47,7 @@ const ConditionInput = props => {
       }, [props.visibility]);
 
     function createCondition(){
-        if(area=='' || activity==''){
+        if(area==''){
             Alert.alert('Error', 'Please input all required informations about condition');
         }else{
                 props.onCreate({

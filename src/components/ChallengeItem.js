@@ -19,6 +19,7 @@ const ChallengeItem = props => {
             endDate: props.endDate,
             description: props.description,
             stage: props.stage,
+            conditions: props.conditions
             })}>
 
             <Card>

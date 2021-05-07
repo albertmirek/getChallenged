@@ -7,11 +7,12 @@ import { AuthContext } from './AuthProvider';
 import Loading from '../components/Loading';
 
 export default function Routes() {
-  const { user, setUser } = useContext(AuthContext);
+
   const [loading, setLoading] = useState(true);
   const [initializing, setInitializing] = useState(true);
 
-  // Handle user state changes
+  const { user, setUser } = useContext(AuthContext);
+  
   function onAuthStateChanged(user) {
     setUser(user);
     if (initializing) setInitializing(false);
@@ -20,7 +21,7 @@ export default function Routes() {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    return subscriber;
   }, []);
 
   if (loading) {

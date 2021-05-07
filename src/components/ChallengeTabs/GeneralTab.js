@@ -4,31 +4,15 @@ import {Content, Header, Title, Container, CardItem, Card, Button} from 'native-
 
 import Colors from '../../constants/Colors';
 import {windowHeight, windowWidth} from '../../utils/Dimensions';
-import InputModal from '../InputModal';
+
+import CustomActionSheet from '../CustomActionSheet';
 
 
 const GeneralTab = props => {
 
 
     const [feed, setFeed] = useState([]);
-    const[modalVisible, setModalVisible] = useState(false);
-
-    let modal;
-    if(modalVisible==true){
-     modal =<InputModal 
-                isVisible={modalVisible}
-                conditions={props.conditions}
-                setIsVisible={(val) => setModalVisible(val)}
-            />
-            // console.log(modalVisible)
-    //  <Modal visible={modalVisible} onRequestClose={()=>{ Alert.alert('Modal closed'); setModalVisible(false)}}
-    //             animationType='slide'>
-    //             <View>
-    //                 <Text>Hala</Text>
-    //             </View>
-    //         </Modal>
-
-    }else  modal=null;
+    
     
     return(
         <View>
@@ -39,7 +23,6 @@ const GeneralTab = props => {
             
 
             {/* FEED */}
-
             <Card>
                 <CardItem header button onPress={()=> Alert.alert('Showing Full hisotry of feed')}>
                     <Text>Feed</Text>
@@ -59,11 +42,6 @@ const GeneralTab = props => {
 
             </View>
 
-
-            <Button onPress={()=> setModalVisible(true)}>
-                <Text>Make and challenge Input</Text>
-            </Button>
-            {modal}
         </View>
     )
 }

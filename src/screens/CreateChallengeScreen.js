@@ -14,6 +14,7 @@ import {windowHeight, windowWidth} from '../utils/Dimensions';
 import firestore from '@react-native-firebase/firestore';
 import firebase from '@react-native-firebase/app'
 import {AuthContext} from '../navigation/AuthProvider';
+import { DatabaseContext} from '../navigation/DatabaseProvider';
 
 
 const CreateChallengeScreen = props => {
@@ -27,6 +28,7 @@ const CreateChallengeScreen = props => {
     const [description, setDescription] = useState('');
 
     const {user} = useContext(AuthContext);
+    const {getArrayUserChallenges} = useContext(DatabaseContext);
     
     const [reference, setReference] = useState('');
     const [conditionsCount, setConditionsCount] = useState(0);
@@ -151,6 +153,9 @@ const CreateChallengeScreen = props => {
                 beginDate: beginDate,
                 endDate: endDate,
             });
+
+            //Update ArrayOf Challenges
+            getArrayUserChallenges(user.uid);
 
             //If array is not set then firestore().set else firestore().update
             firestore().collection('participants').doc(user.uid).get()

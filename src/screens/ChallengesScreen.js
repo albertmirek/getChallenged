@@ -12,6 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 
 
 import Colors from '../constants/Colors'
+import { DatabaseContext } from '../navigation/DatabaseProvider';
 
 
 const ChallengesScreen = ({navigation}) => {
@@ -21,39 +22,28 @@ const ChallengesScreen = ({navigation}) => {
     const [loading, setLoading] = useState(true);
 
     const {user} = useContext(AuthContext);
+    const {userChallenges, getChallengesInfo, getArrayUserChallenges, arrayUserChallenges} = useContext(DatabaseContext);
+    
 
     useEffect(()=>{
-        // const subscriber = firestore().collection('participants').doc(user.uid).get()
-        // .then((retrieved) => getChallenges(retrieved._data.challenges));
-
-        const subscriber = firestore().collection('participants').doc(user.uid).get()
-        .then((challengesArray) => {
-            if(challengesArray._data.challenges==[]){
-                return;
-            }else{
-                challengesArray._data.challenges.forEach(challenge => {
-                    firestore().collection('challenges').doc(challenge).get()
-                    .then((retrieved) => {
-                        retrieved._data.id = challenge;
-                        if(validateDuplicity(retrieved)){
-                            if(challenges===[]){
-                                setChallenges(retrieved);
-                            }
-                            else{
-                                setChallenges((prevChallenges)=> [...prevChallenges, retrieved]);
-                            }
-                            console.log('update of challenge occured');
-                       }
-                    });
-                });
-            }
-        });
-
+        if(arrayUserChallenges!=[]){
+            arrayUserChallenges.forEach(challengeID=>{
+                firestore().collection('challenges').doc(challengeID).get()
+                .then(challenge => {
+                    challenge._data.id = challengeID;
+                        if(challenges == []){
+                        setChallenges(challenge);
+                    }else{
+                        setChallenges(prevChallenges=>[...prevChallenges,challenge])
+                    }
+                })
+            })
+        }
 
         if(loading){
             setLoading(false);
         }
-        return subscriber;
+        // return subscriber;
     },[]);
 
     
@@ -79,17 +69,6 @@ const ChallengesScreen = ({navigation}) => {
                     onPress={()=>navigation.navigate('CreateChallenge')}
                     title='Create new Challenge!'
                     />
-                {/* <ChallengeInput visible={isAddMode} onAddChallenge={addChallengeHandler} /> */}
-                {/* <FlatList
-                    keyExtractor={(item, index) =>item.id}
-                    data={userChallenges}
-                    renderItem = {itemData =>(
-                        <ChallengeItem 
-                            id={itemData.item.id}
-                            title={itemData.item.value}
-                        />
-                    )}
-                    /> */}
                     <FlatList
                         data={challenges}
                         renderItem={({item})=> (
@@ -100,6 +79,7 @@ const ChallengesScreen = ({navigation}) => {
                                 beginDate={item._data.beginDate}
                                 endDate={item._data.endDate}
                                 description={item._data.description}
+                                conditions={item._data.conditions}
                                 navigation={navigation}
                             />
                         )}

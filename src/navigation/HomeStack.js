@@ -1,6 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
+
+
 import HomeScreen from '../screens/HomeScreen';
 import ChallengesScreen from '../screens/ChallengesScreen';
 import CreateChallengeScreen from '../screens/CreateChallengeScreen';
@@ -18,7 +20,8 @@ export default function HomeStack(){
                     headerStyle:{
                         backgroundColor:Colors.secondary,
                     },
-                    headerTintColor:Colors.primary
+                    headerTintColor:Colors.primary,
+                    cardStyle:{backgroundColor:'transparent'},
                 }}>
                 <Stack.Screen name='Home' 
                     component={HomeScreen}/>
@@ -30,7 +33,6 @@ export default function HomeStack(){
                     name="CreateChallenge"
                     component={CreateChallengeScreen}
                     options={{title:'Let\'s Create Challenge'}, { header: () => null }}
-                    // user={user}
                 />   
                 <Stack.Screen
                     name='Challenge'

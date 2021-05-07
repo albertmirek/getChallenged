@@ -23,8 +23,6 @@ const CustomActionSheet = props => {
                 if(element.area==props.area&&element.usage == 'activity'){
                     BUTTONS.push(element.name);
                 }
-                
-                
             });
         }else{
             DefinedActivities.forEach(element => {
@@ -36,9 +34,25 @@ const CustomActionSheet = props => {
         }
     }
 
+    function insertConditions(conditions){
+        BUTTONS = [];
+        BUTTONS.push('Cancel');
+        // CANCEL_INDEX= BUTTONS.length;
+        conditions.forEach(condition => {
+            BUTTONS.push(condition.area +': ' + condition.activity+ ' '+ condition.goalType);
+            // BUTTONS.push(condition.area);
+        });
+    }
+
+    if(props.for == 'conditions'){
+        insertConditions(props.conditions);
+        console.log('inserting conditions');
+    }
     if(props.usage!=null){
         insert(props.usage);
     }
+    
+
     
     return(
         <Button bordered dark color={Colors.secondary}

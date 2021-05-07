@@ -1,6 +1,6 @@
 import React,{useState, useEffect, useContext} from 'react';
 import { View, StyleSheet, Text, Alert, Modal} from 'react-native';
-import {Icon, Header, Content, Body, Left, Right, Footer, Title, Tabs, Tab, Button, Segment, Container} from 'native-base';
+import {Icon, Header, Content, Body, Left, Right, Footer, Title, Tabs, Tab, Button, Segment, Container, DefaultTabBar} from 'native-base';
 
 import firestore from '@react-native-firebase/firestore';
 
@@ -9,28 +9,40 @@ import Colors from '../constants/Colors';
 import Icons from '../constants/Icons';
 import {windowHeight, windowWidth} from '../utils/Dimensions';
 import GeneralTab from '../components/ChallengeTabs/GeneralTab';
-import InfoTab from '../components/ChallengeTabs/InfoTab';
+import InsertTab from '../components/ChallengeTabs/InsertTab';
 import Loading from '../components/Loading';
 // import { ChallengeContext } from '../navigation/ChallengeProvider';
+
+const renderTabBar = (props) => {
+    props.tabStyle = Object.create(props.tabStyle);
+  return <DefaultTabBar {...props} />;
+}
 
 const ChallengeScreen = ({route, navigation}) => {
 
     const[loading,setLoading] = useState(true);
+    const [conditions, setConditions] = useState([]);
 
     const {id,name, stage, beginDate, endDate, description} = route.params;
     const {user} = useContext(AuthContext);
-
+    
 
     useEffect(()=>{
         //Query on feed
-
         //Query on user Progress?
-
+        // console.log(conditions);
         //Query on Chat
 
-        //Query on SubCollection
-            // firestore().collection(id+'/conditions').get()
-            //     .then((conditions) => setConditions(conditions));
+        //Query on Conditions
+        firestore().collection('challenges').doc(id).collection('conditions').get()
+        .then((data) => {
+            data._docs.forEach(condition => {
+                if(conditions==[]){
+                    setConditions(condition._data);
+                }else setConditions(prevConditions=>[...prevConditions, condition._data]);
+            });
+        })
+
         // getConditions(id);
         
         if(loading){
@@ -62,7 +74,7 @@ const ChallengeScreen = ({route, navigation}) => {
                     <Tabs
                     tabBarActiveTextColor={Colors.secondary}
                     tabBarUnderlineStyle={{backgroundColor:Colors.primary}}
-                    tabContainerStyle={{borderBottomWidth:0}}
+                    renderTabBar={renderTabBar}
                     >
                         <Tab heading="General"
                         // activeTabStyle={{backgroundColor:Colors.primary}} 
@@ -76,16 +88,22 @@ const ChallengeScreen = ({route, navigation}) => {
                             endDate = {endDate}
                             description = {description}
                             user = {user}
-                            // conditions = {conditions}
+                            conditions = {conditions}
                             />
                         
                         </Tab>
 
-                        <Tab heading="Info"
+                        <Tab heading="Insert"
                         // activeTabStyle={{backgroundColor:Colors.primary}} 
                         // tabStyle={{backgroundColor:Colors.secondary}} textStyle={{color:'white'}}
                         >
-                            <InfoTab    />
+                            <InsertTab  
+                                beginDate={beginDate}
+                                endDate = {endDate}
+                                user ={user}
+                                conditions={conditions}
+                                challengeId={id}
+                            />
                         </Tab>
                     </Tabs>
             </Container>

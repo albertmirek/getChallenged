@@ -5,6 +5,8 @@ import FormButton from '../components/FormButton';
 import FormInput from '../components/FormInput';
 import Colors from  '../constants/Colors';
 import {AuthContext} from '../navigation/AuthProvider';
+import LinearGradient from 'react-native-linear-gradient';
+import { windowHeight, windowWidth } from '../utils/Dimensions';
 
 export default function LoginScreen({navigation}){
     
@@ -16,7 +18,8 @@ export default function LoginScreen({navigation}){
 
 
     return(
-        <View style={styles.container}>
+        // <LinearGradient colors={[Colors.primary, '#f23F23' ,Colors.secondary]} style={styles.container}>
+         <View style={styles.container}>
             <Text style={styles.text}>Welcome to GetChallenged</Text>
             <FormInput
                 value={email}
@@ -44,6 +47,7 @@ export default function LoginScreen({navigation}){
                     <Text style={styles.navButtonText}>New User? Sign up here!</Text>
                 </TouchableOpacity>
         </View>
+        
     )
 };
 
