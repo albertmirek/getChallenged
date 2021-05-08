@@ -24,7 +24,7 @@ const InputModal =props =>{
 
     const {isExpired, accessTokenStravaExpiration, hasRefreshToken, insertActivity} = useContext(DatabaseContext);
     const {user} = useContext(AuthContext);
-    const {setToken,token,stravaInitialExchange, stravaConfig, stravaActivitiesEndpoint, doRefreshToken} = useContext(ApiContext);
+    const {setToken,token,stravaInitialExchange, stravaActivitiesEndpoint, doRefreshToken} = useContext(ApiContext);
 
     useEffect(()=>{
         console.log('effect');
@@ -45,7 +45,7 @@ const InputModal =props =>{
                 }else if(retrievedToken.exists==true && Date.parse(retrievedToken._data.accessTokenExpirationDate)<Date.parse(nowDate)){
                    doRefreshToken(retrievedToken._data.refreshToken)
                 }else{
-                    stravaInitialExchange(stravaConfig);
+                    stravaInitialExchange();
                 }
             })
         }else{
@@ -55,9 +55,6 @@ const InputModal =props =>{
     };
 
     async function getActivities(accessToken) { 
-    {/*        TODOOOO          */}
-        // Dodělat způsob jak přidávat na základě data
-
         await fetch(stravaActivitiesEndpoint+accessToken)
                     .then(res=>res.json())
                     .then(data=>{
@@ -70,8 +67,6 @@ const InputModal =props =>{
                                 }
                             }
                         });
-                        // setActivities(data);
-                        console.log(data);
                     })
     }
 

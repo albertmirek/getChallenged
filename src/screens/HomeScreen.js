@@ -17,12 +17,14 @@ import firestore from '@react-native-firebase/firestore';
 import { DatabaseContext } from '../navigation/DatabaseProvider';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import { Container } from 'native-base';
+import { ApiContext } from '../navigation/ApiProvider';
 
 export default function HomeScreen ({navigation}) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const {user, logout} = useContext(AuthContext);
     const {getArrayUserChallenges,arrayUserChallenges} = useContext(DatabaseContext);
+    const {initializeStravaConfig, stravaConfig} = useContext(ApiContext);
 
     const modalVisibleHandler = () => {
         setModalVisible(true);
@@ -33,6 +35,12 @@ export default function HomeScreen ({navigation}) {
         getArrayUserChallenges(user.uid);
         // console.log(arrayUserChallenges);
         
+        console.log(stravaConfig);
+        if(stravaConfig==undefined){
+            initializeStravaConfig();
+        }
+        
+
         //Testing
         var firstDate = new Date(2021-5-4);
         var secondDate = new Date(2021-4-1);

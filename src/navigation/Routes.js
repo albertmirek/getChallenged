@@ -8,23 +8,21 @@ import Loading from '../components/Loading';
 
 export default function Routes() {
 
-  const [loading, setLoading] = useState(true);
   const [initializing, setInitializing] = useState(true);
 
   const { user, setUser } = useContext(AuthContext);
-  
-  function onAuthStateChanged(user) {
-    setUser(user);
-    if (initializing) setInitializing(false);
-    setLoading(false);
-  }
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber;
   }, []);
+  
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
 
-  if (loading) {
+  if (initializing) {
     return <Loading />;
     }
     
@@ -34,4 +32,5 @@ export default function Routes() {
       </NavigationContainer>
     
     );
+  
   }
