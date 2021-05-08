@@ -29,6 +29,7 @@ const InputModal =props =>{
     useEffect(()=>{
         console.log('effect');
         console.log(props.condition);
+        console.log(activities);
     },[activities])
     // console.log(props.conditions);
 
@@ -59,6 +60,7 @@ const InputModal =props =>{
                     .then(res=>res.json())
                     .then(data=>{
                         data.forEach(activity => {
+                            // console.log(activity);
                             if(activity.type==props.condition.activity){
                                 if(activities!=[]){
                                     setActivities(prevActivities=>[...prevActivities, activity]);
