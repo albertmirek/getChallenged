@@ -23,7 +23,7 @@ export default function HomeScreen ({navigation}) {
 
     const [modalVisible, setModalVisible] = useState(false);
     const {user, logout} = useContext(AuthContext);
-    const {getArrayUserChallenges,arrayUserChallenges} = useContext(DatabaseContext);
+    const {getArrayUserChallenges, userName, setUserName} = useContext(DatabaseContext);
     const {initializeStravaConfig, stravaConfig} = useContext(ApiContext);
 
     const modalVisibleHandler = () => {
@@ -34,12 +34,13 @@ export default function HomeScreen ({navigation}) {
     useEffect(()=>{
         getArrayUserChallenges(user.uid);
         // console.log(arrayUserChallenges);
-        
-        console.log(stravaConfig);
         if(stravaConfig==undefined){
             initializeStravaConfig();
         }
-        
+        if(userName==''){
+            firestore().collection('participants').doc(user.uid).get()
+            .then(res=>setUserName(res._data.username))
+        }
 
         //Testing
         var firstDate = new Date(2021-5-4);
@@ -50,18 +51,16 @@ export default function HomeScreen ({navigation}) {
     },[])
 
     return(
-        // <View style={styles.screen}>
-        // <Container style={styles.screen}>
-        <LinearGradient colors={['#4c669f', '#192f6a']} style={{flex:1}}>
+        <View style={styles.screen}>
+
             
             <FormButton buttonTitle='Logout' onPress={()=>logout()} />
-
-            <Text>HAHA</Text>
+            <FormButton buttonTitle='Find new challenges!' onPress={()=>navigation.navigate('SearchChallenge')} />
+            <Text>DODělat: Chat, vyhledávání nových challengí, lehkej přehled z challengí?</Text>
             <Navigation nav={navigation} modalVisibleHandler={()=>modalVisibleHandler()} />
             
-        </LinearGradient>
-        // </Container>
-        // {/* </View> */}
+
+         </View>
     );
 }
 

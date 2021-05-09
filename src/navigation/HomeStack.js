@@ -7,6 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ChallengesScreen from '../screens/ChallengesScreen';
 import CreateChallengeScreen from '../screens/CreateChallengeScreen';
 import ChallengeScreen from '../screens/ChallengeScreen';
+import SearchChallengeScreen from '../screens/SearchChallengeScreen';
 
 import Colors from '../constants/Colors';
 
@@ -38,6 +39,11 @@ export default function HomeStack(){
                     name='Challenge'
                     component={ChallengeScreen}
                     options={{ header: () => null }}
+                />
+                <Stack.Screen
+                    name='SearchChallenge'
+                    component={SearchChallengeScreen}
+                    options={{title:'Find a new challenges'}}
                 />
             </Stack.Navigator>
     )

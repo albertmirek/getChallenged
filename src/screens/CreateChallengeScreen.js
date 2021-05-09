@@ -182,11 +182,11 @@ const CreateChallengeScreen = props => {
          <Container style={{height:windowHeight, width:windowWidth, flex:1}} >
                 
                 <Header hasTabs style={{backgroundColor:Colors.primary}} >
-                    <Left>
+                    <Left style={{flex:1}}>
                         <Button title='Cancel' color={'red'} onPress={()=>cancelChallengeAlert()}/>
                     </Left>
                     <Body>
-                        <Title style={{color:Colors.secondary}}>Challenge</Title>
+                        <Title style={{color:Colors.secondary, alignSelf:'center'}}>Challenge</Title>
                     </Body>
                     <Right>
                         <Button title='Create' color={Colors.secondary} onPress={()=>createChallengeHandler()}/>

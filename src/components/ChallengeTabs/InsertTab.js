@@ -45,12 +45,15 @@ const InsertTab = (props) => {
 
     useEffect(()=>{
         insertCondition();
+        
+
         if(loading){
             setLoading(false);
         }
+
+        // return ()=>subscriber();
     },[])
 
-    
 
     function insertCondition(){
         BUTTONS=[];
@@ -85,11 +88,10 @@ const InsertTab = (props) => {
 
     const sendInputs = () =>{
 
-        const response = insertActivity(user.uid, props.challengeId, activityInput, isEnabled, chosenCondition.id);
-        if(response == true){
-            //TODO
-            //SWITCH NA JINEJ TAB
-        }
+        insertActivity(user.uid, props.challengeId, activityInput, isEnabled, chosenCondition.id);
+
+        console.log('updating called');
+        props.valuesUpdate(chosenCondition, activityInput.value);
     }
 
 
@@ -98,11 +100,12 @@ const InsertTab = (props) => {
         setModalVisible(false);
         setInputWithApi(false);
         setDisabledSendButton(false);
-
         setActivityInput(prevData=>({
             ...prevData,
             id:activity.id,
             value:activity.distance,
+            unit:chosenCondition.unit,
+            activity:chosenCondition.activity,
             date:activity.start_date_local
         }));
         // setActivityInput({
@@ -143,7 +146,7 @@ const InsertTab = (props) => {
             
 
             <Form style={styles.infoContainer}>
-                <Button warning style={styles.actionBtn}
+                <Button warning style={styles.actionBtn} color={Colors.primary}
                     title='Choose condition'
                 onPress={() =>
                     ActionSheet.show(
@@ -273,7 +276,8 @@ const styles = StyleSheet.create({
         // backgroundColor: Colors.primary
     },
     actionBtn:{
-        alignSelf:'center'
+        alignSelf:'center',
+        
     },
     btnText:{
         padding:5,

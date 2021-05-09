@@ -14,6 +14,7 @@ export const DatabaseProvider = ({children}) => {
     const [userChallenges, setUserChallenges] = useState([]);
     // const [challenges, setChallenges] = useState([]);
     const [token, setToken] = useState();
+    const [userName, setUserName] = useState('');
 
     const [arrayUserChallenges, setArrayUserChallenges] = useState([]);
     const [challengeInfo, setChallengeInfo] = useState();
@@ -23,6 +24,8 @@ export const DatabaseProvider = ({children}) => {
     return(
         <DatabaseContext.Provider
             value={{
+                userName,
+                setUserName,
                 userChallenges,
                 
                 // challenges,
@@ -34,6 +37,14 @@ export const DatabaseProvider = ({children}) => {
                     .then(data => {
                         setArrayUserChallenges(data._data.challenges);
                     });
+                },
+                updateArrayUserChallenges: (uid, challengeId)=>{
+                    console.log(uid);
+                    console.log(challengeId);
+                    firestore().collection('participants').doc(uid).update({
+                        challenges: firestore.FieldValue.arrayUnion(challengeId)
+                    });
+                    setArrayUserChallenges(prevChallenges=>[...prevChallenges, challengeId]);
                 },
                 challengeInfo,
                 getChallengesInfo: (challengeId) => {
@@ -170,10 +181,12 @@ export const DatabaseProvider = ({children}) => {
                                 //     insertDate: new Date(),
                                 //     dateOfExecution: activity.date
                                 // });
-                                
+                                // firestore().collection('challenges').doc(challengeId+'/inputs/'+uid+)
                                 firestore().collection('challenges').doc(challengeId+'/conditions/'+conditionId+'/'+uid+'/'+activity.id).set({
                                     id: activity.id,
-                                    value: activity.value,
+                                    value: activity.value/1000,
+                                    activity: activity.activity,
+                                    unit: activity.unit,
                                     insertDate: new Date(),
                                     dateOfExecution: activity.date
                                 }).then((inserted)=>console.log(inserted));

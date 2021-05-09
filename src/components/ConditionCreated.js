@@ -46,8 +46,10 @@ const ConditionCreated = props => {
     return(
         <View style={styles.container}>
             <View style={styles.aboutContainer}>
+                <View>
                 <Text style={styles.text}>{props.area}:</Text>
                 <Text style={styles.textPrimary}>{props.activity}</Text>
+                </View>
                 <Text style={styles.text}>{props.isEnabled}</Text>
                 <View style={styles.trackerContainer}>
                     <Text style={{color:'white'}}>Tracker:</Text>

@@ -60,7 +60,6 @@ const InputModal =props =>{
                     .then(res=>res.json())
                     .then(data=>{
                         data.forEach(activity => {
-                            // console.log(activity);
                             if(activity.type==props.condition.activity){
                                 if(activities!=[]){
                                     setActivities(prevActivities=>[...prevActivities, activity]);
@@ -86,6 +85,7 @@ const InputModal =props =>{
                 <Button bordered warning  style={{alignSelf:'center', padding:5}}
                         onPress={()=>openStravaApp()}
                         title='Fetch Activities with Strava'
+                        color={Colors.primary}
                         />
 
                 <FlatList
@@ -107,6 +107,7 @@ const InputModal =props =>{
                 <Button onPress={()=>props.setIsVisible(false)} 
                     title='Go back'
                     style={styles.goback}
+                    color={Colors.primary}
                 />
                 
             </View>

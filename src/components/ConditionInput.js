@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { View, Text,  TextInput, TouchableOpacity, Image,
-    StyleSheet, Modal, Alert
+    StyleSheet, Modal, Alert, ScrollView
 
 } from 'react-native';
 
@@ -152,7 +152,7 @@ const ConditionInput = props => {
                         </View>
                   </Header>
                 
-                <View style={styles.bodyContainer}>
+                <ScrollView style={styles.bodyContainer}>
                     <Card>
                         <CardItem style={styles.cardItem}>
                             
@@ -248,7 +248,7 @@ const ConditionInput = props => {
                         </CardItem>
                     </Card>
                     
-                </View>
+                </ScrollView>
               </View>
               
               
