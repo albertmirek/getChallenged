@@ -56,7 +56,6 @@ export default function HomeScreen ({navigation}) {
             
             <FormButton buttonTitle='Logout' onPress={()=>logout()} />
             <FormButton buttonTitle='Find new challenges!' onPress={()=>navigation.navigate('SearchChallenge')} />
-            <Text>DODělat: Chat, vyhledávání nových challengí, lehkej přehled z challengí?</Text>
             <Navigation nav={navigation} modalVisibleHandler={()=>modalVisibleHandler()} />
             
 
